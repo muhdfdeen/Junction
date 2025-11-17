@@ -7,7 +7,11 @@ website: https://github.com/muhdfdeen/junction
 api-version: '1.21'
 dependencies:
   server:
-    LuckPerms:
-      load: BEFORE
     floodgate:
       load: BEFORE
+    LuckPerms:
+      load: BEFORE
+      required: false
+    Vault:
+      load: BEFORE
+      required: false

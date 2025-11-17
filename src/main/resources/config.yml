@@ -10,13 +10,9 @@ debug: false
 # Automatically assign players on Bedrock Edition to a specified group
 permissions:
   enabled: true
-
-  # Which permission plugin to use
-  # Supported: "LuckPerms" or "Vault"
+  # Which permission plugin to use ("LuckPerms" or "Vault")
   provider: "LuckPerms"
-
-  # Group assignment for Bedrock Edition players
-  # Note: The specified group must already exist in your permission plugin!
+  # Group name must exist in your permission plugin!
   group: "bedrock"
 
 # Do not touch this!
