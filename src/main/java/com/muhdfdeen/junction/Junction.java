@@ -1,6 +1,5 @@
 package com.muhdfdeen.junction;
 
-import net.kyori.adventure.text.Component;
 import net.luckperms.api.LuckPerms;
 
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -8,37 +7,40 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.muhdfdeen.junction.permission.LuckPermsProvider;
 import com.muhdfdeen.junction.permission.PermissionProvider;
+import com.muhdfdeen.junction.util.Logger;
 
 public final class Junction extends JavaPlugin {
     private static Junction plugin;
     private PermissionProvider permissionProvider;
+    private Logger log;
 
     @Override
     public void onEnable() {
         plugin = this;
+        this.log = new Logger(this);
         saveDefaultConfig();
         setupPermissionProvider();
         getServer().getPluginManager().registerEvents(new com.muhdfdeen.junction.listener.PlayerJoinListener(this), this);
-        getComponentLogger().info(Component.text("Plugin enabled successfully."));
+        log.info("Plugin enabled successfully");
     }
 
     private void setupPermissionProvider() {
         if (!getConfig().getBoolean("permissions.enabled")) {
-            getComponentLogger().info(Component.text("Permission management is disabled."));
+            log.info("Permission management disabled");
             return;
         }
 
         String providerType = getConfig().getString("permissions.provider", "LuckPerms");
         if (providerType.equalsIgnoreCase("LuckPerms")) {
             if (setupLuckPerms()) {
-                getComponentLogger().info(Component.text("LuckPerms permission provider initialized."));
+                log.info("LuckPerms provider initialized");
             } else {
-                getComponentLogger().warn(Component.text("Failed to initialize LuckPerms permission provider. Is LuckPerms installed?"));
+                log.warn("Failed to initialize LuckPerms, is it installed?");
             }
          } else if (providerType.equalsIgnoreCase("Vault")) {
-            getComponentLogger().info(Component.text("Vault permission provider is not yet implemented."));
+            log.info("Vault support not yet implemented");
          } else {
-            getComponentLogger().warn(Component.text("Unknown permission provider: " + providerType));
+            log.warn("Unknown permission provider: " + providerType);
          }
     }
 
@@ -57,6 +59,10 @@ public final class Junction extends JavaPlugin {
 
     public PermissionProvider getPermissionProvider() {
         return permissionProvider;
+    }
+
+    public Logger getPluginLogger() {
+        return log;
     }
 
     public static Junction getPlugin() {
