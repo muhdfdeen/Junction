@@ -1,9 +1,9 @@
 package com.muhdfdeen.junction.util;
 
-import com.muhdfdeen.junction.Junction;
-
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+
+import com.muhdfdeen.junction.Junction;
 
 public class Logger {
     private final Junction plugin;

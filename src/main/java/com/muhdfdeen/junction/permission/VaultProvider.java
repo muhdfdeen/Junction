@@ -1,7 +1,8 @@
 package com.muhdfdeen.junction.permission;
 
-import net.milkbowl.vault2.permission.Permission;
 import org.bukkit.entity.Player;
+
+import net.milkbowl.vault2.permission.Permission;
 
 public class VaultProvider implements PermissionProvider {
     private final Permission permission;

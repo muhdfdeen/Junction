@@ -1,14 +1,15 @@
 package com.muhdfdeen.junction.listener;
 
-import com.muhdfdeen.junction.Junction;
-import com.muhdfdeen.junction.permission.PermissionProvider;
-import com.muhdfdeen.junction.util.Logger;
-
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+
 import org.geysermc.floodgate.api.FloodgateApi;
+
+import com.muhdfdeen.junction.Junction;
+import com.muhdfdeen.junction.permission.PermissionProvider;
+import com.muhdfdeen.junction.util.Logger;
 
 public class PlayerJoinListener implements Listener {
     private final Junction plugin;
@@ -23,11 +24,6 @@ public class PlayerJoinListener implements Listener {
         Logger log = plugin.getPluginLogger();
 
         log.debug("Player join event triggered: " + player.getName());
-
-        if (!plugin.getConfig().getBoolean("permissions.enabled")) {
-            log.debug("Permissions disabled, skipping " + player.getName());
-            return;
-        }
 
         boolean isBedrockPlayer = FloodgateApi.getInstance().isFloodgatePlayer(player.getUniqueId());
         log.debug(player.getName() + " detected as " + (isBedrockPlayer ? "Bedrock" : "Java") + " Edition");

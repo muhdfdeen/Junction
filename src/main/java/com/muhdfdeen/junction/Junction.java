@@ -3,14 +3,17 @@ package com.muhdfdeen.junction;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
+
+import net.luckperms.api.LuckPerms;
+import net.milkbowl.vault2.permission.Permission;
+
+import com.muhdfdeen.junction.command.JunctionCommand;
 import com.muhdfdeen.junction.listener.PlayerJoinListener;
 import com.muhdfdeen.junction.permission.LuckPermsProvider;
 import com.muhdfdeen.junction.permission.PermissionProvider;
 import com.muhdfdeen.junction.permission.VaultProvider;
 import com.muhdfdeen.junction.util.Logger;
-
-import net.luckperms.api.LuckPerms;
-import net.milkbowl.vault2.permission.Permission;
 
 public final class Junction extends JavaPlugin {
     private static Junction plugin;
@@ -24,6 +27,10 @@ public final class Junction extends JavaPlugin {
         saveDefaultConfig();
         setupPermissionProvider();
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
+        this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> {
+            JunctionCommand junctionCommand = new JunctionCommand(this);
+            event.registrar().register(junctionCommand.createCommand("junction"), "Main Junction command");
+        });
         log.info("Plugin enabled successfully");
     }
 

@@ -1,10 +1,10 @@
 package com.muhdfdeen.junction.permission;
 
+import org.bukkit.entity.Player;
+
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.Node;
-
-import org.bukkit.entity.Player;
 
 public class LuckPermsProvider implements PermissionProvider {
     private final LuckPerms luckPerms;
