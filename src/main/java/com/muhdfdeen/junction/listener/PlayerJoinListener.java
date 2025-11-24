@@ -50,6 +50,11 @@ public class PlayerJoinListener implements Listener {
             return;
         }
 
+        if (permissionProvider.isPlayerInGroup(player, groupName)) {
+            log.debug(player.getName() + " already in group: " + groupName + " - skipping...");
+            return;
+        }
+
         log.debug("Attempting to add " + player.getName() + " to group: " + groupName);
 
         boolean success = permissionProvider.addPlayerToGroup(player, groupName);

@@ -16,11 +16,8 @@ public class LuckPermsProvider implements PermissionProvider {
     @Override
     public boolean addPlayerToGroup(Player player, String group) {
         User user = luckPerms.getUserManager().getUser(player.getUniqueId());
-        if (user == null)
-            return false;
-        if (isPlayerInGroup(player, group)) {
-            return true;
-        }
+        if (user == null) return false;
+        if (isPlayerInGroup(player, group)) return true;
 
         Node node = Node.builder("group." + group).build();
         user.data().add(node);

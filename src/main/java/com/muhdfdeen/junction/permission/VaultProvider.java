@@ -14,9 +14,7 @@ public class VaultProvider implements PermissionProvider {
     @Override
     public boolean addPlayerToGroup(Player player, String group) {
         try {
-            if (isPlayerInGroup(player, group)) {
-                return true;
-            }
+            if (isPlayerInGroup(player, group)) return true;
             return permission.playerAddGroup(null, player, group);
         } catch (Exception e) {
             return false;
