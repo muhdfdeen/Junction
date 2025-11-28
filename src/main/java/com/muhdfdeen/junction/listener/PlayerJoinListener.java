@@ -26,7 +26,17 @@ public class PlayerJoinListener implements Listener {
         log.debug("Player join event triggered: " + player.getName());
 
         boolean isBedrockPlayer = FloodgateApi.getInstance().isFloodgatePlayer(player.getUniqueId());
-        log.debug(player.getName() + " detected as " + (isBedrockPlayer ? "Bedrock" : "Java") + " Edition");
+        if (isBedrockPlayer) {
+            var floodgatePlayer = FloodgateApi.getInstance().getPlayer(player.getUniqueId());
+            log.debug(player.getName() + " is a Bedrock player.");
+            log.debug("Player UUID: " + player.getUniqueId().toString());
+            if (floodgatePlayer != null) {
+                log.debug("Player Device Info: " + floodgatePlayer.getDeviceOs());
+                log.debug("Player Input Mode: " + floodgatePlayer.getInputMode());
+            }
+        } else {
+            log.debug(player.getName() + " is a Java player.");
+        }
 
         if (!isBedrockPlayer) {
             log.debug("Skipping Java player: " + player.getName());
