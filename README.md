@@ -31,7 +31,7 @@ debug: false
 # This module automatically assigns Bedrock Edition players to a specific group.
 permissions:
   # Should this module be enabled?
-  enabled: true
+  enabled: false
   # Which permission provider should be used?
   # Available options: LuckPerms, Vault
   provider: LuckPerms
