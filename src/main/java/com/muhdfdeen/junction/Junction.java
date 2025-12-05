@@ -4,11 +4,12 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
-
 import net.luckperms.api.LuckPerms;
 import net.milkbowl.vault2.permission.Permission;
 
 import com.muhdfdeen.junction.command.JunctionCommand;
+import com.muhdfdeen.junction.config.Config;
+import com.muhdfdeen.junction.config.Config.MainConfiguration;
 import com.muhdfdeen.junction.listener.PlayerJoinListener;
 import com.muhdfdeen.junction.permission.LuckPermsProvider;
 import com.muhdfdeen.junction.permission.PermissionProvider;
@@ -17,6 +18,7 @@ import com.muhdfdeen.junction.util.Logger;
 
 public final class Junction extends JavaPlugin {
     private static Junction plugin;
+    private MainConfiguration config;
     private PermissionProvider permissionProvider;
     private Logger log;
 
@@ -24,8 +26,11 @@ public final class Junction extends JavaPlugin {
     public void onEnable() {
         plugin = this;
         this.log = new Logger(this);
-        saveDefaultConfig();
-        setupPermissionProvider();
+        if (!reload()) {
+            log.error("Disabling plugin due to critical configuration error.");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
         this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> {
             JunctionCommand junctionCommand = new JunctionCommand(this);
@@ -34,13 +39,24 @@ public final class Junction extends JavaPlugin {
         log.info("Plugin enabled successfully");
     }
 
+    public boolean reload() {
+        try {
+            this.config = Config.load(getDataFolder());
+            setupPermissionProvider();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     private void setupPermissionProvider() {
-        if (!getConfig().getBoolean("permissions.enabled")) {
+        if (!config.permissions.enabled()) {
             log.info("Permission management disabled");
             return;
         }
 
-        String providerType = getConfig().getString("permissions.provider", "LuckPerms");
+        String providerType = config.permissions.provider();
         if (providerType.equalsIgnoreCase("LuckPerms")) {
             if (setupLuckPerms()) {
                 log.info("LuckPerms provider initialized");
@@ -68,7 +84,7 @@ public final class Junction extends JavaPlugin {
             return false;
         }
         LuckPerms luckPerms = provider.getProvider();
-        String groupName = getConfig().getString("permissions.group");
+        String groupName = config.permissions.group();
         if (groupName != null && !groupName.isEmpty()) {
             if (luckPerms.getGroupManager().getGroup(groupName) == null) {
                 log.warn("Group '" + groupName + "' not found in LuckPerms");
@@ -90,7 +106,7 @@ public final class Junction extends JavaPlugin {
             return false;
         }
         Permission permission = provider.getProvider();
-        String groupName = getConfig().getString("permissions.group");
+        String groupName = config.permissions.group();
         if (groupName != null && !groupName.isEmpty()) {
             String[] groups = permission.getGroups();
             boolean groupExists = false;
@@ -111,15 +127,19 @@ public final class Junction extends JavaPlugin {
         return true;
     }
 
-    public PermissionProvider getPermissionProvider() {
-        return permissionProvider;
+    public static Junction getPlugin() {
+        return plugin;
     }
 
     public Logger getPluginLogger() {
         return log;
     }
 
-    public static Junction getPlugin() {
-        return plugin;
+    public MainConfiguration getConfiguration() {
+        return config;
+    }
+
+    public PermissionProvider getPermissionProvider() {
+        return permissionProvider;
     }
 }

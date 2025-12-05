@@ -4,10 +4,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-
 import org.geysermc.floodgate.api.FloodgateApi;
 
 import com.muhdfdeen.junction.Junction;
+import com.muhdfdeen.junction.config.Config.MainConfiguration; 
 import com.muhdfdeen.junction.permission.PermissionProvider;
 import com.muhdfdeen.junction.util.Logger;
 
@@ -21,22 +21,12 @@ public class PlayerJoinListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
+        MainConfiguration config = plugin.getConfiguration();
         Logger log = plugin.getPluginLogger();
 
         log.debug("Player join event triggered: " + player.getName());
 
         boolean isBedrockPlayer = FloodgateApi.getInstance().isFloodgatePlayer(player.getUniqueId());
-        if (isBedrockPlayer) {
-            var floodgatePlayer = FloodgateApi.getInstance().getPlayer(player.getUniqueId());
-            log.debug(player.getName() + " is a Bedrock player.");
-            log.debug("Player UUID: " + player.getUniqueId().toString());
-            if (floodgatePlayer != null) {
-                log.debug("Player Device Info: " + floodgatePlayer.getDeviceOs());
-                log.debug("Player Input Mode: " + floodgatePlayer.getInputMode());
-            }
-        } else {
-            log.debug(player.getName() + " is a Java player.");
-        }
 
         if (!isBedrockPlayer) {
             log.debug("Skipping Java player: " + player.getName());
@@ -54,7 +44,8 @@ public class PlayerJoinListener implements Listener {
 
         log.debug("Permission provider: " + permissionProvider.getName());
 
-        String groupName = plugin.getConfig().getString("permissions.group");
+        String groupName = config.permissions.group();
+
         if (groupName == null || groupName.isEmpty()) {
             log.error("Bedrock group name not configured, check your config file");
             return;

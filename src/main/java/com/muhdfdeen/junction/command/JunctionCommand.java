@@ -30,8 +30,11 @@ public class JunctionCommand {
                 .requires(sender -> sender.getSender().hasPermission("junction.reload"))
                 .executes(ctx -> {
                     CommandSender sender = ctx.getSource().getSender();
-                    plugin.reloadConfig();
-                    sender.sendRichMessage(PREFIX + "Plugin configuration reloaded successfully.");
+                    if (plugin.reload()) {
+                        sender.sendRichMessage(PREFIX + "Plugin configuration reloaded successfully.");
+                    } else {
+                        sender.sendRichMessage(PREFIX + "<red>Failed to reload config! Check console for errors.</red>");
+                    }
                     return Command.SINGLE_SUCCESS;
                 })
             )
