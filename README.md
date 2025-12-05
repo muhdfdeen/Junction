@@ -27,7 +27,7 @@ A Minecraft plugin that automatically assigns Bedrock Edition players to a permi
 
 ```yaml
 # Should debug mode be enabled for detailed logs?
-debug: true
+debug: false
 # This module automatically assigns Bedrock Edition players to a specific group.
 permissions:
   # Should this module be enabled?
