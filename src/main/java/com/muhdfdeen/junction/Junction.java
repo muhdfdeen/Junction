@@ -1,7 +1,10 @@
 package com.muhdfdeen.junction;
 
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
+
+import org.bstats.bukkit.Metrics;
 
 import com.muhdfdeen.junction.command.JunctionCommand;
 import com.muhdfdeen.junction.config.Config;
@@ -26,6 +29,7 @@ public final class Junction extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
+        Metrics metrics = new Metrics(this, 28238);
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
         this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> {
             JunctionCommand junctionCommand = new JunctionCommand(this);
