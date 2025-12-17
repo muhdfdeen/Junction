@@ -9,9 +9,9 @@ import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 
 import com.muhdfdeen.junction.Junction;
+import com.muhdfdeen.junction.config.Config.MainConfiguration; 
 
 public class JunctionCommand {
-    private static final String PREFIX = "<color:#00D4FF><bold>Junction</bold> ➟ </color>";
     private final Junction plugin;
 
     public JunctionCommand(Junction plugin) {
@@ -19,10 +19,11 @@ public class JunctionCommand {
     }
 
     public LiteralCommandNode<CommandSourceStack> createCommand(final String commandName) {
+        MainConfiguration config = plugin.getConfiguration();
         return Commands.literal(commandName)
             .executes(ctx -> {
                 CommandSender sender = ctx.getSource().getSender();
-                sender.sendRichMessage(PREFIX + "Plugin version: " + plugin.getPluginMeta().getVersion());
+                sender.sendRichMessage(config.messages.prefix() + "Plugin version: " + plugin.getPluginMeta().getVersion());
                 sender.sendRichMessage("<green>🛈</green> <gray>Type <white>/junction reload</white> to reload the configuration.</gray>");
                 return Command.SINGLE_SUCCESS;
             })
@@ -31,9 +32,11 @@ public class JunctionCommand {
                 .executes(ctx -> {
                     CommandSender sender = ctx.getSource().getSender();
                     if (plugin.reload()) {
-                        sender.sendRichMessage(PREFIX + "Plugin configuration reloaded successfully.");
+                        plugin.getPluginLogger().info("Configuration reloaded by " + sender.getName());
+                        sender.sendRichMessage(config.messages.prefix() + config.messages.reloadSuccess());
                     } else {
-                        sender.sendRichMessage(PREFIX + "<red>Failed to reload config! Check console for errors.</red>");
+                        plugin.getPluginLogger().warn("Failed to reload configuration by " + sender.getName());
+                        sender.sendRichMessage(config.messages.prefix() + config.messages.reloadFail());
                     }
                     return Command.SINGLE_SUCCESS;
                 })

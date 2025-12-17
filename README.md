@@ -21,6 +21,7 @@ This allows server admins to easily separate Java and Bedrock permissions (e.g.,
 | :--- | :--- | :--- |
 | `/junction` | None | Displays plugin version info. |
 | `/junction reload` | `junction.reload` | Reloads the configuration. |
+| N/A | `junction.admin` | Receive update notifications. |
 
 ## Configuration
 
@@ -36,6 +37,17 @@ permissions:
   provider: LuckPerms
   # Which permission group should players be assigned to?
   group: geyser
+# Settings related to messages sent by the plugin.
+messages:
+  # Prefix for all messages sent by the plugin.
+  prefix: <color:#00D4FF><bold>Junction</bold> ➟ </color>
+  # Message displayed when the plugin is reloaded.
+  reloadSuccess: Plugin configuration has been reloaded successfully.
+  # Message displayed when the plugin fails to reload.
+  reloadFail: <red>Failed to reload plugin configuration! Check console for errors.</red>
+  # Message displayed when a new version of the plugin is available.
+  updateAvailable: 'A new version is available! <gray>(Current: <red>{current_version}</red>
+    | Latest: <green>{latest_version}</green>)</gray>'
 ```
 
 ## Building
