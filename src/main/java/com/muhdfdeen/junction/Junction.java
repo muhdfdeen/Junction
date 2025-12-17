@@ -1,6 +1,5 @@
 package com.muhdfdeen.junction;
 
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 
@@ -13,6 +12,7 @@ import com.muhdfdeen.junction.listener.PlayerJoinListener;
 import com.muhdfdeen.junction.permission.PermissionProvider;
 import com.muhdfdeen.junction.permission.ProviderManager;
 import com.muhdfdeen.junction.util.Logger;
+import com.muhdfdeen.junction.util.UpdateChecker;
 
 public final class Junction extends JavaPlugin {
     private static Junction plugin;
@@ -24,13 +24,17 @@ public final class Junction extends JavaPlugin {
     public void onEnable() {
         plugin = this;
         this.log = new Logger(this);
+        UpdateChecker updateChecker = new UpdateChecker(this);
+        updateChecker.checkForUpdates();
         if (!reload()) {
             log.error("Disabling plugin due to critical configuration error.");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
+        @SuppressWarnings("unused")
         Metrics metrics = new Metrics(this, 28238);
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
+        getServer().getPluginManager().registerEvents(updateChecker, this);
         this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> {
             JunctionCommand junctionCommand = new JunctionCommand(this);
             event.registrar().register(junctionCommand.createCommand("junction"), "Main Junction command");

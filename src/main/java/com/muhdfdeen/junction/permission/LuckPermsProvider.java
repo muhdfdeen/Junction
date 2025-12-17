@@ -31,12 +31,12 @@ public class LuckPermsProvider implements PermissionProvider {
         LuckPerms api = provider.getProvider();
         if (groupName != null && !groupName.isEmpty()) {
             if (api.getGroupManager().getGroup(groupName) == null) {
-                log.warn("Group '" + groupName + "' not found in LuckPerms");
+                log.warn("Group '" + groupName + "' not found in LuckPerms.");
             } else {
-                log.debug("Found group '" + groupName + "' in LuckPerms");
+                log.debug("Found group '" + groupName + "' in LuckPerms.");
             }
         }
-        log.info("LuckPerms provider initialized");
+        log.info("LuckPerms provider initialized.");
         return new LuckPermsProvider(api);
     }
 

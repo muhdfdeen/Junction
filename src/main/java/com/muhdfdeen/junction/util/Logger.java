@@ -1,9 +1,9 @@
 package com.muhdfdeen.junction.util;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import com.muhdfdeen.junction.Junction;
 import com.muhdfdeen.junction.config.Config.MainConfiguration;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.Bukkit;
 
 public class Logger {
     private final Junction plugin;
@@ -12,22 +12,29 @@ public class Logger {
         this.plugin = plugin;
     }
 
+    private void log(String colorTag, String message) {
+        MainConfiguration config = plugin.getConfiguration();
+        Bukkit.getConsoleSender().sendMessage(
+            MiniMessage.miniMessage().deserialize(config.messages.prefix() + colorTag + message)
+        );
+    }
+
     public void debug(String message) {
         MainConfiguration config = plugin.getConfiguration();
         if (config != null && config.debug) {
-            plugin.getComponentLogger().info(Component.text("[DEBUG] " + message, NamedTextColor.GRAY));
+            log("<gray>[DEBUG] </gray>", message);
         }
     }
 
     public void info(String message) {
-        plugin.getComponentLogger().info(Component.text(message));
+        log("", message);
     }
 
     public void warn(String message) {
-        plugin.getComponentLogger().warn(Component.text(message));
+        log("<yellow>", message);
     }
 
     public void error(String message) {
-        plugin.getComponentLogger().error(Component.text(message));
+        log("<red>", message);
     }
 }

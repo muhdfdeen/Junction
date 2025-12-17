@@ -11,7 +11,7 @@ public class ProviderManager {
         PermissionProvider provider = null;
 
         if (!config.permissions.enabled()) {
-            log.info("Permission management disabled");
+            log.info("Permission management disabled.");
             return null;
         }
 

@@ -41,7 +41,7 @@ public class PlayerJoinListener implements Listener {
         PermissionProvider permissionProvider = plugin.getPermissionProvider();
 
         if (permissionProvider == null) {
-            log.warn("Can't assign group to " + player.getName() + ", no permission provider available");
+            log.warn("Can't assign group to " + player.getName() + ", no permission provider available.");
             return;
         }
 
@@ -50,7 +50,7 @@ public class PlayerJoinListener implements Listener {
         String groupName = config.permissions.group();
 
         if (groupName == null || groupName.isEmpty()) {
-            log.error("Bedrock group name not configured, check your config file");
+            log.error("Bedrock group name not configured, check your config file.");
             return;
         }
 
