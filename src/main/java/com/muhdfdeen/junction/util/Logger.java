@@ -1,7 +1,7 @@
 package com.muhdfdeen.junction.util;
 
 import com.muhdfdeen.junction.Junction;
-import com.muhdfdeen.junction.config.Config.MainConfiguration;
+import com.muhdfdeen.junction.config.ConfigManager;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 
@@ -13,15 +13,15 @@ public class Logger {
     }
 
     private void log(String colorTag, String message) {
-        MainConfiguration config = plugin.getConfiguration();
+        ConfigManager config = plugin.getConfiguration();
         Bukkit.getConsoleSender().sendMessage(
-            MiniMessage.miniMessage().deserialize(config.messages.prefix() + colorTag + message)
+            MiniMessage.miniMessage().deserialize(config.getMessageConfig().messages.prefix() + colorTag + message)
         );
     }
 
     public void debug(String message) {
-        MainConfiguration config = plugin.getConfiguration();
-        if (config != null && config.debug) {
+        ConfigManager config = plugin.getConfiguration();
+        if (config != null && config.getMainConfig().debug) {
             log("<gray>[DEBUG] </gray>", message);
         }
     }

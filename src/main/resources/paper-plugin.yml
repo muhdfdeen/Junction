@@ -1,5 +1,5 @@
 name: Junction
-version: "1.1.1"
+version: "1.2.0-SNAPSHOT"
 main: com.muhdfdeen.junction.Junction
 description: A Minecraft plugin that automatically assigns Bedrock Edition players to a permission group using Floodgate.
 author: muhdfdeen

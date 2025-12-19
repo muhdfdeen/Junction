@@ -7,7 +7,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.geysermc.floodgate.api.FloodgateApi;
 
 import com.muhdfdeen.junction.Junction;
-import com.muhdfdeen.junction.config.Config.MainConfiguration;
+import com.muhdfdeen.junction.config.ConfigManager;
 import com.muhdfdeen.junction.permission.PermissionProvider;
 import com.muhdfdeen.junction.util.Logger;
 
@@ -21,13 +21,13 @@ public class PlayerJoinListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        MainConfiguration config = plugin.getConfiguration();
+        ConfigManager config = plugin.getConfiguration();
         Logger log = plugin.getPluginLogger();
 
         log.debug("Player join event triggered: " + player.getName());
 
         PermissionProvider permissionProvider = plugin.getPermissionProvider();
-        String groupName = config.permissions.group();
+        String groupName = config.getMainConfig().permissions.group();
 
         if (permissionProvider == null) {
             log.warn("Can't assign group to " + player.getName() + ", no permission provider available.");

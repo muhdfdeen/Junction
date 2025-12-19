@@ -25,6 +25,8 @@ This allows server admins to easily separate Java and Bedrock permissions (e.g.,
 
 ## Configuration
 
+`config.yml`
+
 ```yaml
 # Should debug mode be enabled for detailed logs?
 debug: false
@@ -37,6 +39,11 @@ permissions:
   provider: LuckPerms
   # Which permission group should players be assigned to?
   group: geyser
+```
+
+`messages.yml`
+
+```yaml
 # Settings related to messages sent by the plugin.
 messages:
   # Prefix for all messages sent by the plugin.

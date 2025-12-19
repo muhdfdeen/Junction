@@ -6,8 +6,7 @@ import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import org.bstats.bukkit.Metrics;
 
 import com.muhdfdeen.junction.command.JunctionCommand;
-import com.muhdfdeen.junction.config.Config;
-import com.muhdfdeen.junction.config.Config.MainConfiguration;
+import com.muhdfdeen.junction.config.ConfigManager;
 import com.muhdfdeen.junction.listener.PlayerJoinListener;
 import com.muhdfdeen.junction.permission.PermissionProvider;
 import com.muhdfdeen.junction.permission.ProviderManager;
@@ -16,7 +15,7 @@ import com.muhdfdeen.junction.util.UpdateChecker;
 
 public final class Junction extends JavaPlugin {
     private static Junction plugin;
-    private MainConfiguration config;
+    private ConfigManager config;
     private PermissionProvider permissionProvider;
     private Logger log;
 
@@ -44,7 +43,8 @@ public final class Junction extends JavaPlugin {
 
     public boolean reload() {
         try {
-            this.config = Config.load(getDataFolder());
+            this.config = new ConfigManager(getDataFolder());
+            this.config.load();
             this.permissionProvider = ProviderManager.initializeProvider(this);
             return true;
         } catch (Exception e) {
@@ -61,7 +61,7 @@ public final class Junction extends JavaPlugin {
         return log;
     }
 
-    public MainConfiguration getConfiguration() {
+    public ConfigManager getConfiguration() {
         return config;
     }
 

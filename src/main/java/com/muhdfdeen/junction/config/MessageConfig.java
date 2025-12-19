@@ -9,27 +9,12 @@ import de.exlll.configlib.Configuration;
 import de.exlll.configlib.YamlConfigurationProperties;
 import de.exlll.configlib.YamlConfigurations;
 
-public final class Config {
-    public static MainConfiguration load(File dataFolder) {
+public final class MessageConfig {
+    public static MessageConfiguration load(File dataFolder) {
         YamlConfigurationProperties properties = ConfigLib.BUKKIT_DEFAULT_PROPERTIES.toBuilder().build();
-        Path configFile = new File(dataFolder, "config.yml").toPath();
-        return YamlConfigurations.update(configFile, MainConfiguration.class, properties);
+        Path configFile = new File(dataFolder, "messages.yml").toPath();
+        return YamlConfigurations.update(configFile, MessageConfiguration.class, properties);
     }
-
-    @Configuration
-    public static class BaseConfiguration {
-        @Comment("Should debug mode be enabled for detailed logs?")
-        public boolean debug = false;
-    }
-
-    public record PermissionSettings(
-        @Comment("Should this module be enabled?")
-        boolean enabled,
-        @Comment({"Which permission provider should be used?", "Available options: LuckPerms, Vault"})
-        String provider,
-        @Comment("Which permission group should players be assigned to?")
-        String group
-    ) {}
 
     public record MessageSettings(
         @Comment("Prefix for all messages sent by the plugin.")
@@ -43,9 +28,7 @@ public final class Config {
     ) {}
 
     @Configuration
-    public static final class MainConfiguration extends BaseConfiguration {
-        @Comment("This module automatically assigns Bedrock Edition players to a specific group.")
-        public PermissionSettings permissions = new PermissionSettings(false, "LuckPerms", "geyser");
+    public static class MessageConfiguration {
         @Comment("Settings related to messages sent by the plugin.")
         public MessageSettings messages = new MessageSettings(
             "<color:#00D4FF><bold>Junction</bold> ➟ </color>",
