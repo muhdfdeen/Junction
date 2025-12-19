@@ -31,23 +31,16 @@ public final class MainConfig {
         @Comment("Should this module be enabled?")
         boolean enabled,
         @Comment("Commands specific to Java Edition players.")
-        EditionCommands java,
+        EventCommands java,
         @Comment("Commands specific to Bedrock Edition players.")
-        EditionCommands bedrock
+        EventCommands bedrock
     ) {}
 
-    public record EditionCommands(
-        @Comment("Commands to execute when a player joins the server.")
-        CommandSource join,
-        @Comment("Commands to execute when a player leaves the server.")
-        CommandSource quit
-    ) {}
-
-    public record CommandSource(
-        @Comment("List of commands to execute as console.")
-        List<String> console,
-        @Comment("List of commands to execute as the player.")
-        List<String> player
+    public record EventCommands(
+        @Comment("List of console commands to execute when a player joins.")
+        List<String> join,
+        @Comment("List of console commands to execute when a player quits.")
+        List<String> quit
     ) {}
 
     @Configuration
@@ -59,13 +52,13 @@ public final class MainConfig {
         @Comment("This module automatically executes commands based on Minecraft editions.")
         public CommandSettings commands = new CommandSettings(
             false,
-            new EditionCommands(
-                new CommandSource(List.of("say Java player, {player}, has joined the server."), List.of("msg {player} Hello, I am on Java edition!")),
-                new CommandSource(List.of(), List.of())
+            new EventCommands(
+                List.of("say Java player {player} joined"),
+                List.of("say Java player {player} left")
             ),
-            new EditionCommands(
-                new CommandSource(List.of("say Bedrock player, {player}, has joined the server."), List.of("msg {player} Hello, I am on Bedrock edition!")),
-                new CommandSource(List.of(), List.of())
+            new EventCommands(
+                List.of("say Bedrock player {player} joined"),
+                List.of("say Bedrock player {player} left")
             )
         );
     }

@@ -1,5 +1,7 @@
 package com.muhdfdeen.junction.listener;
 
+import java.util.List;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -9,6 +11,7 @@ import org.geysermc.floodgate.api.FloodgateApi;
 import com.muhdfdeen.junction.Junction;
 import com.muhdfdeen.junction.config.ConfigManager;
 import com.muhdfdeen.junction.permission.PermissionProvider;
+import com.muhdfdeen.junction.util.CommandUtils;
 import com.muhdfdeen.junction.util.Logger;
 
 public class PlayerJoinListener implements Listener {
@@ -24,51 +27,43 @@ public class PlayerJoinListener implements Listener {
         ConfigManager config = plugin.getConfiguration();
         Logger log = plugin.getPluginLogger();
 
-        log.debug("Player join event triggered: " + player.getName());
-
         PermissionProvider permissionProvider = plugin.getPermissionProvider();
-        String groupName = config.getMainConfig().permissions.group();
+        boolean isBedrock = FloodgateApi.getInstance().isFloodgatePlayer(player.getUniqueId());
 
-        if (permissionProvider == null) {
-            log.warn("Can't assign group to " + player.getName() + ", no permission provider available.");
-            return;
-        }
+        log.debug("Player join event triggered: " + player.getName() + " (Bedrock: " + isBedrock + ")");
 
-        log.debug("Permission provider: " + permissionProvider.getName());
-
-        if (groupName == null || groupName.isEmpty()) {
-            log.error("Bedrock group name not configured, check your config file.");
-            return;
-        }
-
-        var floodgatePlayer = FloodgateApi.getInstance().getPlayer(player.getUniqueId());
-
-        if (floodgatePlayer == null) {
-            log.debug("Cleaning Java player: " + player.getName());
-            if (permissionProvider.isPlayerInGroup(player, groupName)) {
-                permissionProvider.removePlayerFromGroup(player, groupName);
-                log.debug("Removed leftover group '" + groupName + "' from Java player " + player.getName());
+        if (permissionProvider != null) {
+            String groupName = config.getMainConfig().permissions.group();
+            if (isBedrock) {
+                if (!permissionProvider.isPlayerInGroup(player, groupName)) {
+                    log.debug("Attempting to add " + player.getName() + " to group: " + groupName);
+                    boolean success = permissionProvider.addPlayerToGroup(player, groupName);
+                    if (success)
+                        log.info("Added Bedrock player " + player.getName() + " to group '" + groupName + "'");
+                    else
+                        log.warn("Failed to add " + player.getName() + " to group '" + groupName + "'");
+                }
+            } else {
+                if (permissionProvider.isPlayerInGroup(player, groupName)) {
+                    permissionProvider.removePlayerFromGroup(player, groupName);
+                    log.debug("Removed leftover group '" + groupName + "' from Java player " + player.getName());
+                }
             }
-            return;
         }
 
-        if (permissionProvider.isPlayerInGroup(player, groupName)) {
-            log.debug(player.getName() + " already in group: " + groupName + " - skipping...");
-            return;
-        }
+        if (config.getMainConfig().commands.enabled())
+            handleCommands(player, isBedrock, config, log);
+    }
 
-        log.debug("Processing Bedrock player: " + player.getName());
-        log.debug("UUID: " + player.getUniqueId());
-        log.debug("Device: " + floodgatePlayer.getDeviceOs());
-        log.debug("Input: " + floodgatePlayer.getInputMode());
+    private void handleCommands(Player player, boolean isBedrock, ConfigManager config, Logger log) {
+        List<String> commands;
 
-        log.debug("Attempting to add " + player.getName() + " to group: " + groupName);
-
-        boolean success = permissionProvider.addPlayerToGroup(player, groupName);
-        if (success) {
-            log.info("Added Bedrock player " + player.getName() + " to group '" + groupName + "'");
+        if (isBedrock) {
+            commands = config.getMainConfig().commands.bedrock().quit();
         } else {
-            log.warn("Failed to add " + player.getName() + " to group '" + groupName + "'");
+            commands = config.getMainConfig().commands.java().quit();
         }
+
+        CommandUtils.dispatch(player, commands);
     }
 }
