@@ -1,19 +1,25 @@
 # Junction
 
-**Junction** is a streamlined solution for Geyser/Floodgate servers. It automatically detects Bedrock Edition players upon join and assigns them to a specific permission group.
-
-This allows server admins to easily separate Java and Bedrock permissions (e.g., giving Bedrock players access to specific commands, kits, or prefixes) without manual intervention.
+Junction is a [Floodgate](https://geysermc.org/download/?project=floodgate) addon for servers that are running Paper (and its forks). It allows administrators to automate permission assignments and execute edition-specific commands upon join and quit. This allows server admins to seamlessly manage the differences between editions, such as:
+- Assigning Bedrock-specific prefixes or permission groups.
+- Executing compensation commands automatically.
+- Granting access to simplified sell menus or GUIs.
 
 ## Features
 
-- Identifies Bedrock Edition players via Floodgate API.
-- Works with LuckPerms or any Vault-compatible permission plugin.
+- Automatically assigns Bedrock Edition players to specific permission groups via LuckPerms or Vault.
+- Execute console commands when players join or quit, with separate lists for Java and Bedrock editions.
+- Includes internal placeholders (`{player}`, `{uuid}`) and supports PlaceholderAPI.
 
-## Requirements
-- **Java 21** or higher
-- [Paper 1.21+](https://papermc.io/downloads/paper)
-- [Floodgate](https://geysermc.org/download/?project=floodgate)
-- A permission plugin (LuckPerms recommended)
+## Installation
+
+1. Ensure your server is running **Java 21**+ and **Paper 1.21**+ (or a fork).
+2. Install [Floodgate](https://geysermc.org/download/?project=floodgate) (Required for Bedrock player detection).
+3. Download the latest release of Junction and place it in your `plugins` folder.
+4. Optional Dependencies:
+   - [LuckPerms](https://luckperms.net/) or [Vault](https://github.com/MilkBowl/Vault) or [VaultUnlocked](https://modrinth.com/plugin/vaultunlocked): Required only if you want to use the group assignment feature.
+   - [PlaceholderAPI](https://placeholderapi.com/): Recommended if you want to use external placeholders in commands.
+5. Restart your server.
 
 ## Commands & Permissions
 
@@ -39,6 +45,28 @@ permissions:
   provider: LuckPerms
   # Which permission group should players be assigned to?
   group: geyser
+# This module automatically executes commands based on Minecraft editions.
+# Available internal placeholders: {player}, {uuid}
+# PlaceholderAPI support is enabled if installed.
+commands:
+  # Should this module be enabled?
+  enabled: false
+  # Commands specific to Java Edition players.
+  java:
+    # List of console commands to execute when a player joins.
+    join:
+    - say Java player {player} joined
+    # List of console commands to execute when a player quits.
+    quit:
+    - say Java player {player} left
+  # Commands specific to Bedrock Edition players.
+  bedrock:
+    # List of console commands to execute when a player joins.
+    join:
+    - say Bedrock player {player} joined
+    # List of console commands to execute when a player quits.
+    quit:
+    - say Bedrock player {player} left
 ```
 
 `messages.yml`
